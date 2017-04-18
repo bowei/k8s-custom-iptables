@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Copyright 2017 The Kubernetes Authors.
 #
@@ -14,11 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+# Can be overridden via env vars.
+DEST_SUBNET=${DEST_SUBNET:-10.123.0.0/16}
+IPTABLES=${IPTABLES:-/sbin/iptables}
+COMMENT="fix-iptables: MASQ"
 
-kubectl delete -f install.yaml
-
-# Remove the extra IP tables rules.
-kubectl create -f uninstall.yaml
-sleep 360
-kubectl delete -f uninstall.yaml
+${IPTABLES} \
+  -t nat \
+  -D POSTROUTING \
+  -d "${DEST_SUBNET}" \
+  -m comment --comment "${COMMENT}" \
+  -m addrtype ! --dst-type LOCAL \
+  -j MASQUERADE

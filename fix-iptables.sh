@@ -19,7 +19,7 @@ DEST_SUBNET=${DEST_SUBNET:-10.123.0.0/16}
 IPTABLES=${IPTABLES:-/sbin/iptables}
 SLEEP_INTERVAL=${SLEEP_INTERVAL:-1}
 
-COMMENT="fix-iptables: MASQ for VPN"
+COMMENT="fix-iptables: MASQ"
 
 echo `date` "Starting fix-iptables"
 

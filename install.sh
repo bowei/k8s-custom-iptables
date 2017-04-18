@@ -24,7 +24,10 @@ if [[ -z ${TARGET} ]]; then
 fi
 
 sed "s/__TARGET__/${TARGET}/g" \
-  < daemon-set.yaml.in \
-  > daemon-set.yaml
+  < install.yaml.in \
+  > install.yaml
+sed "s/__TARGET__/${TARGET}/g" \
+  < uninstall.yaml.in \
+  > uninstall.yaml
 
-kubectl create -f daemon-set.yaml
+kubectl create -f install.yaml
