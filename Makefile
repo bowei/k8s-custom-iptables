@@ -14,11 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-NAME := fix-iptables
-SRCS := fix-iptables.sh remove-iptables.sh
+NAME := k8s-custom-iptables
+SRCS := run.sh
 
 TAG ?= 1.0
-# REGISTRY=gcr.io/your-registry
+REGISTRY=gcr.io/google_containers
 IMAGE := $(REGISTRY)/$(NAME):$(TAG)
 
 ifeq ($(REGISTRY),)

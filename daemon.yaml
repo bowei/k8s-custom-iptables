@@ -15,26 +15,42 @@
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
-  name: remove-fix-iptables
+  name: k8s-custom-iptables
   labels:
-    app: fix-iptables
+    app: k8s-custom-iptables
     version: v1
 spec:
   template:
     metadata:
       labels:
-        name: remove-fix-iptables
+        name: k8s-custom-iptables
     spec:
       hostNetwork: true
-      restartPolicy: Never
       containers:
-        - resources:
+        - name: k8s-custom-iptables
+          resources:
           securityContext:
             privileged: true
-          env:
-            - name: DEST_SUBNET
-              value: __TARGET__
-          image: __REGISTRY__/fix-iptables:1.0
+          image: gcr.io/google_containers/k8s-custom-iptables:1.0
           imagePullPolicy: Always
-          name: fix-iptables
-          command: [ "sh", "-c", "/remove-iptables.sh" ]
+          command: [ "sh", "-c", "/run.sh" ]
+          resources:
+            requests:
+              cpu: 5m
+              memory: 10Mi
+          volumeMounts:
+          - mountPath: /cfg
+            name: cfg
+      volumes:
+      - name: cfg
+        configMap:
+          name: k8s-custom-iptables
+          optional: true
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-custom-iptables
+data:
+  nat.rules:

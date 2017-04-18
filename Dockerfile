@@ -16,6 +16,5 @@ FROM alpine
 RUN apk update
 RUN apk add iptables
 
-COPY fix-iptables.sh /fix-iptables.sh
-COPY remove-iptables.sh /remove-iptables.sh
+COPY run.sh /run.sh
 RUN chmod +x /*.sh

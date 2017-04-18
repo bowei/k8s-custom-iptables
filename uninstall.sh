@@ -16,10 +16,40 @@
 
 set -e
 
-echo "Removing daemon set"
-kubectl delete -f install.yaml
+echo "Removing iptable rules"
+sed 's/__NAT_RULES__//g' config.yaml.in | kubectl apply -f -
+echo "Waiting for config update to be applied"
 
-echo "Remove the extra IP tables rules."
-kubectl create -f uninstall.yaml
-sleep 1
-kubectl delete -f uninstall.yaml
+pods=$(kubectl get pods -l 'name=k8s-custom-iptables' -o jsonpath='{.items[*].metadata.name}')
+count=0
+for pod in ${pods}; do
+  count=$((${count} + 1))
+done
+
+echo "Waiting for ${count} pods to update: ${pods}"
+
+# Wait for all nodes to have no nat rules configured.
+while true; do
+  done=0
+  for pod in ${pods}; do
+    if kubectl logs --tail 1 ${pod} 1>/dev/null 2>/dev/null; then
+      lastlog=$(kubectl logs --tail 1 ${pod})
+      if echo ${lastlog} | grep -q 'No NAT rules configured'; then
+        done=$((${done} + 1))
+      fi
+    else
+      # We count errors getting logs as success (pod scheduled on master, died
+      # some for some other reason).
+      done=$((${done} + 1))
+    fi
+  done
+
+  if [[ ${done} -eq ${count} ]]; then
+    break
+  fi
+
+  echo "Waiting for $((${count} - ${done})) pods to update"
+done
+
+echo "Removing daemon"
+kubectl delete -f daemon.yaml

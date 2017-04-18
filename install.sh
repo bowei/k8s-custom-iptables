@@ -16,25 +16,10 @@
 
 set -e
 
-if [[ -z ${TARGET:-} ]]; then
-  echo "Must set TARGET env variable to the range to be masqueraded."
+if [[ -z ${TARGETS:-} ]]; then
+  echo "Must set TARGETS env variable to the range(s) to be masqueraded."
   exit 1
 fi
 
-if [[ -z ${REGISTRY:-} ]]; then
-  echo "Must set REGISTRY to the registry where the fix-iptables container was built"
-  exit 1
-fi
-
-cat install.yaml.in \
-  | sed "s+__TARGET__+${TARGET}+g" \
-  | sed "s+__REGISTRY__+${REGISTRY}+g" \
-  > install.yaml
-
-cat uninstall.yaml.in \
-  | sed "s+__TARGET__+${TARGET}+g" \
-  | sed "s+__REGISTRY__+${REGISTRY}+g" \
-  > uninstall.yaml
-
-kubectl create -f install.yaml
-echo "Installed"
+kubectl apply -f daemon.yaml
+sed "s+__NAT_RULES__+${TARGETS}+g" config.yaml.in | kubectl apply -f -

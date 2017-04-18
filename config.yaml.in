@@ -12,28 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: extensions/v1beta1
-kind: DaemonSet
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: fix-iptables
-  labels:
-    app: fix-iptables
-    version: v1
-spec:
-  template:
-    metadata:
-      labels:
-        name: fix-iptables
-    spec:
-      hostNetwork: true
-      containers:
-        - resources:
-          securityContext:
-            privileged: true
-          env:
-            - name: DEST_SUBNET
-              value: __TARGET__
-          image: __REGISTRY__/fix-iptables:1.0
-          imagePullPolicy: Always
-          name: fix-iptables
-          command: [ "sh", "-c", "/fix-iptables.sh" ]
+  name: k8s-custom-iptables
+data:
+  nat.rules: "__NAT_RULES__"
