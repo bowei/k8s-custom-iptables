@@ -10,7 +10,8 @@ REGISTRY=gcr.io/my-registry make
 # Install/uninstall
 
 Install the daemonset that configures the cluster to NAT an IP range.
-Note: this will write out `install.yaml` and `uninstall.yaml`.
+Note: this will write out `install.yaml` and `uninstall.yaml` used by
+`uninstall.sh`.
 
 ```
 REGISTRY=gcr.io/my-registry TARGET=1.2.3.4/24 ./install.sh
