@@ -15,11 +15,15 @@
 # limitations under the License.
 
 NAME := fix-iptables
-SRCS := fix-iptables.sh
+SRCS := fix-iptables.sh remove-iptables.sh
 
 TAG ?= 1.0
-REGISTRY ?= gcr.io/bowei-gke-dev
+# REGISTRY=gcr.io/your-registry
 IMAGE := $(REGISTRY)/$(NAME):$(TAG)
+
+ifeq ($(REGISTRY),)
+$(error Must specify REGISTRY variable)
+endif
 
 all: push
 

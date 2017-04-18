@@ -16,9 +16,10 @@
 
 set -e
 
+echo "Removing daemon set"
 kubectl delete -f install.yaml
 
-# Remove the extra IP tables rules.
+echo "Remove the extra IP tables rules."
 kubectl create -f uninstall.yaml
-sleep 360
+sleep 1
 kubectl delete -f uninstall.yaml

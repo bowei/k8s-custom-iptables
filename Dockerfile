@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 FROM alpine
-MAINTAINER Bowei Du "bowei@google.com"
 
 RUN apk update
 RUN apk add iptables
 
 COPY fix-iptables.sh /fix-iptables.sh
 COPY remove-iptables.sh /remove-iptables.sh
+RUN chmod +x /*.sh
