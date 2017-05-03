@@ -52,4 +52,4 @@ kind: ConfigMap
 metadata:
   name: k8s-custom-iptables
 data:
-  nat.rules:
+  nat.rules: ""
