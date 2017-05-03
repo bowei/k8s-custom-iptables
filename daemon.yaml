@@ -45,7 +45,6 @@ spec:
       - name: cfg
         configMap:
           name: k8s-custom-iptables
-          optional: true
 
 ---
 apiVersion: v1
