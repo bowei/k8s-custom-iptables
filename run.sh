@@ -78,7 +78,7 @@ main() {
       done
     fi
 
-    if [[ -z ${nat_rules} ]]; then
+    if [[ -z "${nat_rules}" ]]; then
       log "No NAT rules configured"
     else
       for subnet in ${old_nat_rules}; do
