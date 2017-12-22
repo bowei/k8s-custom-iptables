@@ -31,9 +31,12 @@ spec:
           resources:
           securityContext:
             privileged: true
-          image: gcr.io/google_containers/k8s-custom-iptables:1.0
+          image: gcr.io/colin-repo/k8s-custom-iptables:1.0
           imagePullPolicy: Always
           command: [ "sh", "-c", "/run.sh" ]
+          env:
+            - name: SLEEP_INTERVAL
+              value: '30'
           resources:
             requests:
               cpu: 5m
