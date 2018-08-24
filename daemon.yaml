@@ -28,7 +28,6 @@ spec:
       hostNetwork: true
       containers:
         - name: k8s-custom-iptables
-          resources:
           securityContext:
             privileged: true
           image: gcr.io/google_containers/k8s-custom-iptables:1.0
