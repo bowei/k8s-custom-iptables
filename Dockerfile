@@ -13,8 +13,7 @@
 # limitations under the License.
 FROM alpine
 
-RUN apk update
-RUN apk add iptables
+RUN apk add --no-cache iptables
 
 COPY run.sh /run.sh
 RUN chmod +x /*.sh
