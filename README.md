@@ -9,7 +9,7 @@ to a TARGETS CIDR range(s) given to the script.
 Install the daemonset that configures the cluster to NAT an IP range.
 
 ```
-TARGETS="1.2.3.4/24 4.5.6.7/16" ./install.sh
+TARGETS="1.2.3.4/24,4.5.6.7/16" ./install.sh
 ```
 
 # Uninstall rules from the cluster.
