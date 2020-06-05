@@ -26,6 +26,16 @@ spec:
         name: k8s-custom-iptables
     spec:
       hostNetwork: true
+      tolerations:
+      - effect: NoSchedule
+        key: worker
+        value: "true"
+      - key: preemptible
+        operator: Equal
+        value: "true"
+      - effect: NoSchedule
+        key: simulation
+        value: "true"
       containers:
         - name: k8s-custom-iptables
           securityContext:
