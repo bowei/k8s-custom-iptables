@@ -17,6 +17,7 @@ set -e
 
 IPTABLES=${IPTABLES:-/sbin/iptables}
 SLEEP_INTERVAL=${SLEEP_INTERVAL:-10}
+WAIT_INTERVAL=${WAIT_INTERVAL:-60}
 CONFIG_DIR=${CONFIG_DIR:-/cfg}
 if [[ -z ${UUID:-} ]]; then
   UUID=$(date "+%s")
@@ -37,7 +38,7 @@ update_nat() {
   # Check if the rule already exists if adding.
   if [[ ${mode} = 'A' ]]; then
     if ${IPTABLES} -t nat -C POSTROUTING -d ${subnet} \
-        -m comment --comment "${comment}" -j MASQUERADE \
+        -m comment --comment "${comment}" -j MASQUERADE -w ${WAIT_INTERVAL}\
         2>/dev/null; then
       log "NAT rule ${comment} is installed"
       return
@@ -49,7 +50,7 @@ update_nat() {
     -${mode} POSTROUTING \
     -d ${subnet} \
     -m comment --comment "${comment}" \
-    -j MASQUERADE
+    -j MASQUERADE -w ${WAIT_INTERVAL}
 
   case ${mode} in
     'A') log "NAT rule ${comment} added";;
@@ -73,16 +74,28 @@ main() {
     # Remove the old NAT rules if config file has changed.
     if [[ "${old_nat_rules}" != "${nat_rules}" ]]; then
       log "Configuration change detected"
-      for subnet in ${old_nat_rules}; do
-        update_nat D ${subnet} "${COMMENT_PREFIX}: ${subnet}"
+      n=0
+      until [ "$n" -ge 5 ]
+      do
+        (for subnet in ${old_nat_rules}; do
+          update_nat D ${subnet} "${COMMENT_PREFIX}: ${subnet}"
+        done) && break
+        n=$((n+1))
+        sleep 5
       done
     fi
 
     if [[ -z "${nat_rules}" ]]; then
       log "No NAT rules configured"
     else
-      for subnet in ${old_nat_rules}; do
-        update_nat A ${subnet} "${COMMENT_PREFIX}: ${subnet}"
+      n=0
+      until [ "$n" -ge 5 ]
+      do
+        (for subnet in ${old_nat_rules}; do
+          update_nat A ${subnet} "${COMMENT_PREFIX}: ${subnet}"
+        done) && break
+        n=$((n+1))
+        sleep 5
       done
     fi
 
