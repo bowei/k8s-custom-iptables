@@ -40,7 +40,6 @@ update_nat() {
     if ${IPTABLES} -t nat -C POSTROUTING -d ${subnet} \
         -m comment --comment "${comment}" -j MASQUERADE -w ${WAIT_INTERVAL}\
         2>/dev/null; then
-      log "NAT rule ${comment} is installed"
       return
     fi
   fi
