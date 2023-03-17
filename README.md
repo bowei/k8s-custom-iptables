@@ -9,7 +9,7 @@ to a TARGETS CIDR range(s) given to the script.
 Install the daemonset that configures the cluster to NAT an IP range.
 
 ```
-TARGETS="1.2.3.4/24 4.5.6.7/16" ./install.sh
+TARGETS="1.2.3.4/24,4.5.6.7/16" ./install.sh
 ```
 
 # Uninstall rules from the cluster.
@@ -30,7 +30,7 @@ kind: ConfigMap
 metadata:
   name: k8s-custom-iptables
 data:
-  nat.rules: "10.0.0.0/24 192.168.0.0/16"
+  nat.rules: "10.0.0.0/24,192.168.0.0/16"
 ```
 
 # Creating and pushing the image.
