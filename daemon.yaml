@@ -29,6 +29,11 @@ spec:
         name: k8s-custom-iptables
     spec:
       hostNetwork: true
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      - effect: NoExecute
+        operator: Exists
       containers:
         - name: k8s-custom-iptables
           securityContext:
